@@ -26,38 +26,21 @@ int Result(char* s, char* res, int len) {
     return k;
 }
 
-int main(int argc, char* argv[]) {
-    if (argc != 2) {
-        write(2, "Использование: ./pchild1 <входной_файл>\n", 36);
-        exit(-1);
-    }
-
-    int out = open(argv[1], O_WRONLY | O_CREAT | O_TRUNC, 0600);
-    if (out == -1) {
-        write(2, "Ошибка открытия выходного файла\n", 33);
-        exit(-1);
-    }
-
-    if (dup2(out, STDOUT_FILENO) == -1) {
-        write(2, "Ошибка dup2\n", 12);
-        exit(-1);
-    }
-    close(out);
-
+int main() {
     char buffer[1024];
     char result[1024];
     int bytes;
     while (1) {
         bytes = read(STDIN_FILENO, buffer, sizeof(buffer));
         if (bytes == -1) {
-            write(2, "Ошибка чтения\n", 15);
+            write(2, "Ошибка чтения\n", 26);
             exit(-1);
         } else if (bytes == 0) {
             break;
         }
         int len = Result(buffer, result, bytes);
         if (write(STDOUT_FILENO, result, len) == -1) {
-            write(2, "Ошибка записи\n", 15);
+            write(2, "Ошибка записи\n", 26);
             exit(-1);
         }
     }
